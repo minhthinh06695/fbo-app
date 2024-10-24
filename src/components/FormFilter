@@ -1,0 +1,171 @@
+import React, { useState } from "react";
+import { FaSpinner } from "react-icons/fa";
+import { IoMdCalendar } from "react-icons/io";
+import { AiOutlineNumber, AiOutlineClose } from "react-icons/ai";
+import { BiDollar } from "react-icons/bi";
+
+const EInvoiceFilter = () => {
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  const [invoiceNumber, setInvoiceNumber] = useState("");
+  const [taxCode, setTaxCode] = useState("");
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!dateFrom) newErrors.dateFrom = "Please select a start date";
+    if (!dateTo) newErrors.dateTo = "Please select an end date";
+    if (dateFrom && dateTo && new Date(dateFrom) > new Date(dateTo)) {
+      newErrors.dateRange = "Invalid date range";
+    }
+    // Removed validation for invoiceNumber and taxCode
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleCancel = () => {
+    // Add your cancel logic here
+    console.log("Form cancelled");
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <div className="relative bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl space-y-6 transition-all duration-300 ease-in-out transform hover:scale-102">
+        <button
+          onClick={handleCancel}
+          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 transition-colors duration-300"
+          aria-label="Close"
+        >
+          <AiOutlineClose className="w-6 h-6" />
+        </button>
+        <h2 className="text-3xl font-bold text-center text-indigo-700 mb-6">e-Invoice Filter</h2>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label htmlFor="dateFrom" className="block text-sm font-medium text-gray-700 mb-1">
+                Date From
+              </label>
+              <div className="relative">
+                <input
+                  type="date"
+                  id="dateFrom"
+                  name="dateFrom"
+                  value={dateFrom}
+                  onChange={(e) => setDateFrom(e.target.value)}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 pl-10"
+                  aria-label="Date From"
+                />
+                <IoMdCalendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              </div>
+              {errors.dateFrom && <p className="mt-1 text-sm text-red-600">{errors.dateFrom}</p>}
+            </div>
+
+            <div>
+              <label htmlFor="dateTo" className="block text-sm font-medium text-gray-700 mb-1">
+                Date To
+              </label>
+              <div className="relative">
+                <input
+                  type="date"
+                  id="dateTo"
+                  name="dateTo"
+                  value={dateTo}
+                  onChange={(e) => setDateTo(e.target.value)}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 pl-10"
+                  aria-label="Date To"
+                />
+                <IoMdCalendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              </div>
+              {errors.dateTo && <p className="mt-1 text-sm text-red-600">{errors.dateTo}</p>}
+            </div>
+          </div>
+
+          {errors.dateRange && (
+            <p className="mt-1 text-sm text-red-600 text-center" role="alert">
+              {errors.dateRange}
+            </p>
+          )}
+
+          <div>
+            <label htmlFor="invoiceNumber" className="block text-sm font-medium text-gray-700 mb-1">
+              Invoice Number (Optional)
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                id="invoiceNumber"
+                name="invoiceNumber"
+                value={invoiceNumber}
+                onChange={(e) => setInvoiceNumber(e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 pl-10"
+                placeholder="Enter invoice number (optional)"
+                aria-label="Invoice Number"
+              />
+              <AiOutlineNumber className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="taxCode" className="block text-sm font-medium text-gray-700 mb-1">
+              Tax Code (Optional)
+            </label>
+            <div className="relative">
+              <select
+                id="taxCode"
+                name="taxCode"
+                value={taxCode}
+                onChange={(e) => setTaxCode(e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 pl-10"
+                aria-label="Tax Code"
+              >
+                <option value="">Select tax code (optional)</option>
+                <option value="VAT">VAT</option>
+                <option value="GST">GST</option>
+                <option value="SALES">Sales Tax</option>
+              </select>
+              <BiDollar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            </div>
+          </div>
+
+          <div className="flex items-center justify-center space-x-4">
+            <button
+              type="submit"
+              className="px-12 py-3 w-full bg-indigo-600 text-white font-semibold rounded-md shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 transition-colors duration-300 flex items-center justify-center"
+              onClick={validateForm}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <FaSpinner className="animate-spin mr-2" />
+                  Processing...
+                </>
+              ) : (
+                "Filter"
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="px-12 py-3 w-full bg-gray-200 text-gray-700 font-semibold rounded-md shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 transition-colors duration-300"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default EInvoiceFilter;

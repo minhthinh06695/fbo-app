@@ -1,14 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import App from './pages/App';
+import reportWebVitals from './utils/reportWebVitals';
+import { BrowserRouter as Router } from 'react-router-dom'; // Thêm import này
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  <Router> {/* Sử dụng BrowserRouter để bao bọc App */}
     <App />
-  </React.StrictMode>
+  </Router>,
 );
 
 // If you want to start measuring performance in your app, pass a function
